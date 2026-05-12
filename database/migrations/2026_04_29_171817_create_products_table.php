@@ -10,16 +10,25 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-{
-    Schema::create('products', function (Blueprint $table) {
-        $table->id();
-        $table->string('name'); // Название товара (например, iPhone)
-        $table->decimal('price', 10, 2); // Цена
-        // Эта строка привязывает товар к категории, которую мы создали выше:
-        $table->foreignId('category_id')->constrained()->onDelete('cascade'); 
-        $table->timestamps();
-    });
-}
+    {
+        Schema::create('products', function (Blueprint $table) {
+            $table->id();
+            
+            // Внешний ключ для связи с категориями
+            $table->foreignId('category_id')
+            ->constrained()
+            ->onDelete('cascade'); 
+            
+            $table->string('name'); // Название (например, Samsung S24 Ultra)
+            $table->text('description')->nullable(); // Описание товара
+            $table->decimal('price', 10, 2); // Цена
+            
+            // Добавляем поле stock (количество), которое требовал сидер
+            $table->integer('stock')->default(0); 
+            
+            $table->timestamps();
+        });
+    }
 
     /**
      * Reverse the migrations.
